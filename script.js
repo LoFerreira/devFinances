@@ -30,6 +30,7 @@ const transactions = [{
 ]
 
 const transaction = {
+    all: transactions,
     incomes() {
         let income = 0;
 
@@ -67,6 +68,7 @@ const DOM = {
         DOM.transactionContainer.appendChild(tr)
 
     },
+
     innerHTMLTransaction(transaction) {
         const CSSclass = transaction.amount > 0 ? "income" : "expense"
 
@@ -89,13 +91,13 @@ const DOM = {
     updateBalance() {
         document
             .getElementById('incomeDisplay')
-            .innerHTML = "Soma das entradas"
+            .innerHTML = Utils.formatCurrency(transaction.incomes())
         document
             .getElementById('expenseDisplay')
-            .innerHTML = "Soma das saídas"
+            .innerHTML = Utils.formatCurrency(transaction.expenses())
         document
             .getElementById('totalDisplay')
-            .innerHTML = "Total"
+            .innerHTML = Utils.formatCurrency(transaction.total())
     }
 }
 
