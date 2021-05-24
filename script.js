@@ -29,12 +29,19 @@ const transactions = [{
     }
 ]
 
-const transaction = {
+const Transaction = {
     all: transactions,
+
+    add(transaction) {
+        Transaction.all.push(transaction)
+
+        App.reload()
+    },
+
     incomes() {
         let income = 0;
 
-        transactions.forEach(transaction => {
+        Transaction.all.forEach(transaction => {
             if (transaction.amount > 0) {
                 income += transaction.amount;
             }
@@ -42,10 +49,11 @@ const transaction = {
 
         return income;
     },
+
     expenses() {
         let expense = 0;
 
-        transactions.forEach(transaction => {
+        Transaction.all.forEach(transaction => {
             if (transaction.amount < 0) {
                 expense += transaction.amount;
             }
@@ -53,8 +61,9 @@ const transaction = {
 
         return expense;
     },
+
     total() {
-        return transaction.incomes() + transaction.expenses();
+        return Transaction.incomes() + Transaction.expenses();
     }
 }
 
@@ -91,13 +100,17 @@ const DOM = {
     updateBalance() {
         document
             .getElementById('incomeDisplay')
-            .innerHTML = Utils.formatCurrency(transaction.incomes())
+            .innerHTML = Utils.formatCurrency(Transaction.incomes())
         document
             .getElementById('expenseDisplay')
-            .innerHTML = Utils.formatCurrency(transaction.expenses())
+            .innerHTML = Utils.formatCurrency(Transaction.expenses())
         document
             .getElementById('totalDisplay')
-            .innerHTML = Utils.formatCurrency(transaction.total())
+            .innerHTML = Utils.formatCurrency(Transaction.total())
+    },
+
+    clearTransactions() {
+        DOM.transactionContainer.innerHTML = ""
     }
 }
 
@@ -118,8 +131,26 @@ const Utils = {
     }
 }
 
-transactions.forEach(function(transaction) {
-    DOM.addTransaction(transaction)
-})
+const App = {
+    init() {
 
-DOM.updateBalance()
+        Transaction.all.forEach(transaction => {
+            DOM.addTransaction(transaction)
+        })
+
+        DOM.updateBalance()
+    },
+    reload() {
+        DOM.clearTransactions()
+        App.init()
+    },
+}
+
+App.init()
+
+Transaction.add({
+    id: 39,
+    description: 'alo',
+    amount: 200,
+    date: '23/01/2021'
+})
